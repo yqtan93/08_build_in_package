@@ -17,9 +17,10 @@ try:
     with open(in_file, newline="") as f:
         reader = csv.reader(f)
         data = []
+        row_counter = 0
         for row in reader:
             data.append(row)
-        print(data)
+            row_counter +=1
 
 # display list of files in current directory if file is not found or input is not a file name
 except FileNotFoundError:
@@ -32,6 +33,7 @@ except IsADirectoryError:
     print("Existing CSV files in current directories: ")
     for f in csv_only:
         print(f)
+
 # file type validation
 except csv.Error:
     print("File is not a .csv file. Please enter a .csv file.")
@@ -43,13 +45,27 @@ except csv.Error:
 
 for i in range(3, len(sys.argv)):
     change = sys.argv[i].split(',')
-    X, Y, value = change
-    data[int(X)][int(Y)] = value
+    
+# validate if change is in correct format
+    if len(change) == 3:
+        X, Y, value = change
+        if int(X) > row_counter:
+            print(f"\nRow number for {change} out of range. Skipping change...") 
+        elif int(Y) > len(data[int(Y)]):
+            print(f"\nColumn number for {change} out of range. Skipping change...")
+        else:
+            data[int(X)][int(Y)] = value
+    else:
+        print(f"\nChange {change} out of range. Skipping change...")
+
 # apply changes according to the user input
 #     for X, Y, value in change:
 #         data[X][Y] = value
 
-print(data)
+# Display updated data
+print("\nData updated successfully. The latest data is as shown below:\n")
+for row in data:
+    print(row)
 
 # write changes to output file
 with open(out_file, 'w', newline="") as f:
