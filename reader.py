@@ -43,8 +43,8 @@ except csv.Error:
 
 # loop through the rest of argv
 
-for i in range(3, len(sys.argv)):
-    change = sys.argv[i].split(',')
+for i in sys.argv[3:]:
+    change = i.split(',')
     
 # validate if change is in correct format
     if len(change) == 3:
