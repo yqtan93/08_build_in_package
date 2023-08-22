@@ -13,6 +13,7 @@ def get_handler(file_name):
     elif file_name.endswith(".pkl"):
         return PickleHandler()
     elif file_name.endswith(".json"):
+        print("This is a JSON file.")
         return JsonHandler()
     else:
         raise FileNotSupportedError(f"File type {file_name} is not supported.")
@@ -33,6 +34,7 @@ if __name__ == "__main__":
     
     file = get_handler(in_file)
     data = file.read_file(in_file)
+    print(data)
     row_counter = file.row_counter
 
     # loop through the rest of argv

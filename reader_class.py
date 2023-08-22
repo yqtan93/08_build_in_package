@@ -11,25 +11,40 @@ files_only = [f for f in files_and_directories if os.path.isfile(os.path.join(cu
 
 
 class FileHandler:
-    pkg_attr = None
+    def __init__(self):
+        self.row_counter = 0
 
-    def read(self, file_name):
+    def read_file(self, file_name):
         with open(file_name, "rb") as f:
             return pkg_attr.load(f)
 
-    def write(self, content, file_name):
+    def write_file(self, content, file_name):
         with open(file_name, "wb") as f:
             pkg_attr.dump(content, f)
 
 class JsonHandler(FileHandler):
-    pkg_attr = json
+    def read_file(self, file_name):
+        with open(file_name, "r") as f:
+            data = json.load(f)
+            self.row_counter += len(data)
+            return data
+
+    def write_file(self, content, file_name):
+        with open(file_name, "w") as f:
+            json.dump(content, f)
 
 class PickleHandler(FileHandler):
-    pkg_attr = pickle
+    def read_file(self, file_name):
+        with open(file_name, "rb") as f:
+            data = pickle.load(f)
+            self.row_counter += len(data)
+            return data
 
-class CsvHandler:
-    def __init__(self):
-        self.row_counter = 0
+    def write_file(self, content, file_name):
+        with open(file_name, "wb") as f:
+            pickle.dump(content, f)
+
+class CsvHandler(FileHandler):
 
     def read_file(self, file_name):
         with open(file_name, newline="") as f:
@@ -37,7 +52,7 @@ class CsvHandler:
             data = []
             for row in reader:
                 data.append(row)
-                self.row_counter +=1
+                self.row_counter +=1 
             return data
         
     def write_file(self, content, file_name):
